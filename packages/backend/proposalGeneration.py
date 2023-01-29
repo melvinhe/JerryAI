@@ -4,8 +4,8 @@ import openai
 from dotenv import load_dotenv
 from pathlib import Path
 
-dotenv_path = Path('..\MinneHack-2023\.env')
-load_dotenv()
+
+gpt3_apiKey = "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"
 
 # Returns the current local date
 today = date.today()
