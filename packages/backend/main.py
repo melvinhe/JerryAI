@@ -30,6 +30,7 @@ class Data(BaseModel):
 dotenv_path = Path('..\MinneHack-2023\.env')
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
+pro_api_key = os.getenv("X-API-Key")
 
 @app.get("/")
 async def root():
@@ -91,7 +92,7 @@ async def getReleventPersonInfo(data: Data):
     print(cID)
     cInfo = getCInfo(cID)
     print(cInfo)
-    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+    header = {'X-API-Key': pro_api_key}
     endpoint2 = f"https://api.propublica.org/congress/v1/members/{cInfo[0]}.json"
     response2 = requests.get(endpoint2, headers=header)
     data = response2.json()
@@ -153,7 +154,7 @@ def getBody(prompt):
 def getCIDS(cType):
     endpoint = "https://api.propublica.org/congress/v1/115/senate/committees.json"
 
-    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+    header = {'X-API-Key': pro_api_key}
 
     response = requests.get(endpoint, headers=header)
 
@@ -171,7 +172,7 @@ def getCInfo(goodCID):
     cInfo = []
     for cid in goodCID:
         endpoint = f"https://api.propublica.org/congress/v1/115/senate/committees/{str(cid)}.json"
-        header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+        header = {'X-API-Key': pro_api_key}
         response = requests.get(endpoint, headers=header)
         data = response.json()
         
@@ -185,7 +186,7 @@ def getCInfo(goodCID):
 def memberInfo(memberList):
     memberInfoList = []
     endpoint = f"https://api.propublica.org/congress/v1/116/senate/members.json"
-    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+    header = {'X-API-Key': pro_api_key}
     response = requests.get(endpoint, headers=header)
     data = response.json()
     for members in data['results'][0]['members']:
