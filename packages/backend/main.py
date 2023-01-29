@@ -9,6 +9,7 @@ import openai
 from dotenv import load_dotenv
 from pathlib import Path
 import requests
+import json
 
 app = FastAPI()
 
@@ -78,18 +79,16 @@ async def BillDirection(data: Data):
     """
 
     generator = pipeline(
-        "text2text-generation", model="bheshaj/bart-large-cnn-small-billsum-5epochs")
+        "text2text-genvcchs")
     
     return generator(data.message)
 
 @app.post("/getReleventPersonInfo")
 async def getReleventPersonInfo(data: Data):
-    msg = "health"
-
-    cID = getCIDS(msg)
+    cID = getCIDS(data)
     cInfo = getCInfo(cID)
     MemberInfoList = memberInfo(cInfo)
-    return MemberInfoList
+    return json.loads(MemberInfoList)
 
 
 @app.post("/getProposal")
@@ -110,13 +109,12 @@ async def getProposal(data: Data):
     body = """THis is a random paragraph that it should grab from openai. mkaies sure to comment this out \n
                for when we actually have to call it"""
 
-    ethank = """I am looking forward to hearing your input on this and am hoping you consider my input.\n
+    ethank = """I am looking forward to hearing your input on this topic.\n
                 Thank you for your time and consideration.\n\n
-                Sincerely,\n\n
-                \n\n\n
+                Sincerely,\n\n\n
                 (your name)"""
     
-    return (intro + title[0]['generated_text'] + body + ethank)
+    return (intro + title[0]['generated_text'] + "\n" + body + ethank)
 
 
 def getTitle(message):
@@ -203,8 +201,8 @@ def memberInfo(memberList):
 # for testing
 # msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
 #  smtst = "a bill proposal that addresses an invasive species in Minnesota"
-# output = asyncio.run(billCassification(msg.lower()))
-# print(output)
+output = asyncio.run(getReleventPersonInfo("health"))
+print(output)
 
 
 
