@@ -51,7 +51,7 @@ export function CTAIllustration() {
             <a href='/generate'>
             <Button
               colorScheme={'green'}
-              bg={'green.400'}
+              bg={'cyan'}
               rounded={'full'}
               px={6}
               _hover={{

@@ -106,27 +106,10 @@ async def getReleventPersonInfo(data: Data):
 @app.post("/getProposal")
 async def getProposal(data: Data):
     today = date.today()
-    intro = f"""
-    {today}\n
-    (officials name)\n
-    (officials title)\n
-    (office/commitee title)\n
-    (officials address)\n
-    (officials city, state and zip code)\n\n
-    """
-
     title = getTitle(data.message)
-
-    #body = getBody(data.message)
-    body = """THis is a random paragraph that it should grab from openai. mkaies sure to comment this out \n
-               for when we actually have to call it"""
-
-    ethank = """I am looking forward to hearing your input on this topic.\n
-                Thank you for your time and consideration.\n\n
-                Sincerely,\n\n\n
-                (your name)"""
-    
-    return (intro + title[0]['generated_text'] + "\n" + body + ethank)
+    body = getBody(data.message)
+    whole = f"{today}\n(officials name)\n(officials title)\n(office/commitee title)\n(officials address)\n(officials city, state and zip code)\n\n{title[0]['generated_text']}\n{body}\nI am looking forward to hearing your input on this topic.\nThank you for your time and consideration.\n\nSincerely,\n\n\n(your name)"
+    return (whole)
 
 
 def getTitle(message):
@@ -147,15 +130,15 @@ def getTitle(message):
 def getBody(prompt):
 
     gpt_prompt = f"""Create me a proposal for a legislative bill. This is a {prompt}
-    Structure it in a 4 paragraph format. First paragraph states why it the topic is imporant. The second paragraph will provide relevant
-    statistics on the topic. The third paragraph will talk about how the bill will be benifitial in any way. The fourth paragrph should
-    wrap up this letter, and ask for a pertnership or the abulity to work together with this person in the future to fix this issue.     
+    Structure it in a 4 paragraph format. In the first paragraph, states why it the topic is imporant with great detail. For the second paragrape, provide multiple relevant
+    statistics on the topic. The third paragraph will talk about how introducing a legislative bill on this topic would be benifitial in any way. The fourth paragrph needs to
+    wrap up this letter, and ask for a partnership or the ability to work together with this person in the future to fix this issue.     
     """
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=gpt_prompt,
-        temperature=1.0, #A low temperature (near 0) is going to give very well-defined answers consistently while a higher number (near 1) will be more creative in its responses
-        max_tokens=750,
+        temperature=0.5, #A low temperature (near 0) is going to give very well-defined answers consistently while a higher number (near 1) will be more creative in its responses
+        max_tokens=1000,
         top_p=1.0,
         frequency_penalty=0.0,
         presence_penalty=0.0

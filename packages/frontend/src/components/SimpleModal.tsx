@@ -32,6 +32,7 @@ import {
   Image,
   Container,
   Badge,
+  Grid,
 } from "@chakra-ui/react";
 import { ST } from "next/dist/shared/lib/utils";
 import { stringify } from "querystring";
@@ -69,7 +70,8 @@ export function SimpleModal() {
       "a bill proposal that addresses " +
       question1 +
       ". The intended outcome would be " +
-      question2;
+      question2 +
+      ". Give 3 steps to get this bill proposed";
 
     const requestOptions = {
       method: "POST",
@@ -234,7 +236,7 @@ export function SimpleModal() {
             </>
           )}
         </Card>
-        <Card width={600} height={200}>
+        <Card width={600} height={240}>
           {summary ? (
             <CardBody>
               <Stack divider={<StackDivider />} spacing="4">
@@ -251,8 +253,7 @@ export function SimpleModal() {
                             " " +
                             classification.percentage}
                         </Badge>
-                        
-                        <Button onClick={getPerson}>
+                        <Button onClick={getPerson} margin={3}>
                           Generate Relevant Contact
                         </Button>
                       </Box>
@@ -351,15 +352,7 @@ export function SimpleModal() {
                         },
                       }}
                     >
-                      <Button flex="1" variant="ghost">
-                        Like
-                      </Button>
-                      <Button flex="1" variant="ghost">
-                        Comment
-                      </Button>
-                      <Button flex="1" variant="ghost">
-                        Share
-                      </Button>
+                      
                     </CardFooter>
                   </Card>
                 ) : (
