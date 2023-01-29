@@ -8,18 +8,26 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 export function LegislatorArea({ personInfo }) {
+
+   
   return (
     <>
       <Menu>
         <MenuButton as={Button}>Your Cats</MenuButton>
         <MenuList>
-          {personInfo?.members.map((item, i) => (
+          {/* {personInfo?.map((item, i) => (
             <MenuItem minH="48px" key={i} onClick={() => alert('Kagebunshin')}>
-            <span>{personInfo?.members[i].first_name} {personInfo?.members[i].last_name}</span>
+            <span>{personInfo?.[i].first_name} {personInfo?.[i].last_name}</span>
           </MenuItem>
-          ))}
+          ))} */}
+          
+            <MenuItem>
+                
+            </MenuItem>
+          
         </MenuList>
       </Menu>
     </>
