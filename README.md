@@ -25,3 +25,14 @@ yarn workspace backend dev
 ```
 
 #### Note: If you see something that can be improved, please make a PR
+
+
+
+List for jorge to install:
+
+pip3 install transformers
+pip3 install transformers datasets
+pip3 install torch
+pip3 install cdg
+pip3 install requests
+
