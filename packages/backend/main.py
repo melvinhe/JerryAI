@@ -58,7 +58,7 @@ async def billCassification(message):
 
 
 @app.post("/BillDirection")
-async def BillDirection(message):
+async def BillDirection(data: Data):
     """
     takes in a prompt then provides direction of where to go to get this bill passed
 
@@ -69,20 +69,7 @@ async def BillDirection(message):
     generator = pipeline(
         "text2text-generation", model="bheshaj/bart-large-cnn-small-billsum-5epochs")
     
-    return generator(message)
-
-
-@app.post("/summerize")
-async def summerizePY(data):
-    """
-    Model type: Tensorflow
-    returns a summerization of message that is provided
-    """
-
-    summarizer = pipeline(
-        "summarization", model="philschmid/bart-large-cnn-samsum")
-
-    return summarizer(data)
+    return generator(data.message)
 
 # for testing
 msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
