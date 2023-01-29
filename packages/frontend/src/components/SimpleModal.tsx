@@ -1,7 +1,8 @@
-import { Box, Button, Card, CardBody, CardHeader, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, useDisclosure, Text, Spinner, Flex, Spacer, Center, ButtonGroup, IconButton, Tag } from "@chakra-ui/react"
+import { Box, Button, Card, CardBody, Container, CardHeader, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, useDisclosure, Text, Spinner, Flex, Spacer, Center, ButtonGroup, IconButton, Tag } from "@chakra-ui/react"
 import { stringify } from "querystring"
 import React, { useEffect, useState } from "react"
 import { HiOutlineClipboard } from "react-icons/hi"
+import { LegislatorCard } from "./LegislatorCard"
 
 export function SimpleModal() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -187,6 +188,15 @@ export function SimpleModal() {
             alignSelf={"auto"}
           /><Text>Summary Loading...</Text></>}
           </Card> */}
+
+        <Container height={300}>
+          <Stack height={300}>
+            <LegislatorCard />
+            <LegislatorCard />
+            <LegislatorCard />
+            <LegislatorCard />
+          </Stack>
+        </Container>
 
         </Flex>
       </>
