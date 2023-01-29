@@ -3,7 +3,7 @@ import os
 import openai
 
 #oops, no longer active, lol scrapers
-gpt3_apiKey = "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"
+
 
 # Returns the current local date
 today = date.today()
