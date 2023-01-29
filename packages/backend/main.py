@@ -21,7 +21,7 @@ async def root():
     return {"message": "Hello World"}
 
 
-@app.get("/summerize")
+@app.post("/summerize")
 async def summerize(message):
     """
     Model type: Tensorflow
@@ -34,7 +34,7 @@ async def summerize(message):
     return summarizer(message)
 
 
-@app.get("/billCassification")
+@app.post("/billCassification")
 async def billCassification(message):
     """
     provide a summarization of the bill in which you would like to classify
