@@ -72,10 +72,10 @@ async def BillDirection(message):
     return classifier(message)
 
 # for testing
-msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
+# msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
 
-output = asyncio.run(BillDirection(msg))
-print(output)
+# output = asyncio.run(BillDirection(msg))
+# print(output)
 
 
 
