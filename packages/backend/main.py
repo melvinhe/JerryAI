@@ -34,7 +34,7 @@ async def summerize(message):
     return summarizer(message)
 
 
-@app.get("/")
+@app.get("/billCassification")
 async def billCassification(message):
     """
     provide a summarization of the bill in which you would like to classify
