@@ -22,6 +22,7 @@ import {
   Spinner,
   Flex,
   Spacer,
+  Link,
   Center,
   ButtonGroup,
   IconButton,
@@ -51,7 +52,7 @@ export function SimpleModal() {
     label: string;
     percentage: string;
   }>({ label: "None", percentage: " " });
-  const [personInfo, setPersonInfo] = useState<any>({});
+  const [personInfo, setPersonInfo] = useState<any>();
 
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
@@ -63,7 +64,6 @@ export function SimpleModal() {
     setSummary("");
     setProposal("");
     setClassification({ label: "", percentage: "" });
-    setPersonInfo({});
 
     const message =
       "a bill proposal that addresses " +
@@ -110,8 +110,16 @@ export function SimpleModal() {
       .catch((err) => {
         alert("billClassification error: " + err);
       });
+  };
 
-    fetch("api/getReleventPersonInfo", requestOptions)
+  const getPerson = (event) => {
+    event.preventDefault();
+
+    fetch("api/getReleventPersonInfo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: classification.label }),
+    })
       .then((response) => response.json())
       .then((data) => setPersonInfo(data))
       .catch((err) => {
@@ -124,11 +132,17 @@ export function SimpleModal() {
 
   return (
     <>
-    
-      <Button variant='solid' onClick={onOpen} color="green.400" margin={5}>
-        Generate
-      </Button>
-
+      <Box>
+        <Button
+          variant="solid"
+          onClick={onOpen}
+          color="black"
+          colorScheme='cyan'
+          margin={5}
+        >
+          Generate
+        </Button>
+      </Box>
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -200,15 +214,23 @@ export function SimpleModal() {
             </CardBody>
           ) : (
             <>
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
-                size="xl"
-                alignSelf={"auto"}
-              />
-              <Text>Proposal Loading...</Text>
+              <Box>
+                <Center>
+                  <Stack>
+                    <Box></Box>
+                    <Box></Box>
+                    <Spinner
+                      thickness="4px"
+                      speed="0.65s"
+                      emptyColor="gray.200"
+                      color="blue.500"
+                      size="xl"
+                      alignSelf={"auto"}
+                    />
+                    <Text>Proposal Loading...</Text>
+                  </Stack>
+                </Center>
+              </Box>
             </>
           )}
         </Card>
@@ -218,91 +240,152 @@ export function SimpleModal() {
               <Stack divider={<StackDivider />} spacing="4">
                 <Box>
                   <Flex>
-                  <Heading size="xs" textTransform="uppercase">
-                    Summary          
-                  </Heading>
-                  <Spacer></Spacer>
-                  {classification.label ? (
-                    <Badge colorScheme={"green"} size={"lg"} height={5}>
-                      {classification.label + " " + classification.percentage}
-                    </Badge>
-                  ) : (
-                    <>
-                      <Spinner
-                        thickness="4px"
-                        speed="0.65s"
-                        emptyColor="gray.200"
-                        color="blue.500"
-                        size="xl"
-                        alignSelf={"auto"}
-                      />
-                      <Text>Classification Loading...</Text>
-                    </>
-                  )}
+                    <Heading size="xs" textTransform="uppercase">
+                      Summary
+                    </Heading>
+                    <Spacer></Spacer>
+                    {classification.label ? (
+                      <Box>
+                        <Badge colorScheme={"green"} size={"lg"} height={5}>
+                          {classification.label +
+                            " " +
+                            classification.percentage}
+                        </Badge>
+                        
+                        <Button onClick={getPerson}>
+                          Generate Relevant Contact
+                        </Button>
+                      </Box>
+                    ) : (
+                      <>
+                        <Box>
+                          <Center>
+                            <Stack>
+                              <Spinner
+                                thickness="4px"
+                                speed="0.65s"
+                                emptyColor="gray.200"
+                                color="blue.500"
+                                size="xl"
+                                alignSelf={"auto"}
+                              />
+                              <Text>Classification Loading...</Text>
+                            </Stack>
+                          </Center>
+                        </Box>
+                      </>
+                    )}
                   </Flex>
-                  
+
                   <Text pt="2" fontSize="sm" whiteSpace={"pre-wrap"}>
                     {summary.toString()}
                   </Text>
                 </Box>
+                <Box></Box>
+                <Box></Box>
+                {personInfo?.results ? (
+                  <Card maxW="md">
+                    <CardHeader>
+                      <Flex>
+                        <Flex
+                          flex="1"
+                          gap="4"
+                          alignItems="center"
+                          flexWrap="wrap"
+                        >
+                          {/* <Avatar name={personInfo[0].first_name} src="https://bit.ly/sage-adebayo" /> */}
+
+                          <Box>
+                            <Flex>
+                              <Stack>
+                                <Heading size="md">
+                                  Relevant legislator:{" "}
+                                </Heading>
+                                <Heading size="sm">
+                                  {personInfo?.results[0].first_name}{" "}
+                                  {personInfo?.results[0].last_name}
+                                </Heading>
+                              </Stack>
+                            </Flex>
+                            <Text>{personInfo?.results[0].roles[0].title}</Text>
+                          </Box>
+                        </Flex>
+                        <IconButton
+                          variant="ghost"
+                          colorScheme="gray"
+                          aria-label="See menu"
+                        />
+                      </Flex>
+                    </CardHeader>
+                    <CardBody>
+                      <Text>
+                        office: {personInfo?.results[0].roles[0].office}
+                      </Text>
+                      <Text>
+                        Phone: {personInfo?.results[0].roles[0].phone}
+                      </Text>
+                      <Link
+                        href={personInfo?.results[0].roles[0].contact_form}
+                        isExternal
+                      >
+                        Contact Form:{" "}
+                        {personInfo?.results[0].roles[0].contact_form}
+                      </Link>
+                      <Text>
+                        office: {personInfo?.results[0].roles[0].office}
+                      </Text>
+                      <Text>committees:</Text>
+                      {personInfo?.results[0].committees?.map((item, i) => (
+                        <Text key={i}>
+                          {personInfo?.results[0].committees[i].name}
+                        </Text>
+                      ))}
+                    </CardBody>
+
+                    <CardFooter
+                      justify="space-between"
+                      flexWrap="wrap"
+                      sx={{
+                        "& > button": {
+                          minW: "136px",
+                        },
+                      }}
+                    >
+                      <Button flex="1" variant="ghost">
+                        Like
+                      </Button>
+                      <Button flex="1" variant="ghost">
+                        Comment
+                      </Button>
+                      <Button flex="1" variant="ghost">
+                        Share
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ) : (
+                  <></>
+                )}
               </Stack>
             </CardBody>
           ) : (
             <>
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
-                size="xl"
-                alignSelf={"auto"}
-              />
-              <Text>Summary Loading...</Text>
-            </>
-          )}
-        </Card>
-
-        {/* <Card width={600} height={200}>
-            {summary ? <CardBody>
-              <Stack divider={<StackDivider />} spacing='4'>
-                <Box>
-                  <Heading size='xs' textTransform='uppercase'>
-                    Summary
-                  </Heading>
-                  <Text pt='2' fontSize='sm' whiteSpace={"pre-wrap"}>
-                    {summary.toString()}
-                  </Text>
-                </Box>
-              </Stack>
-            </CardBody> : <><Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.200'
-            color='blue.500'
-            size='xl'
-            alignSelf={"auto"}
-          /><Text>Summary Loading...</Text></>}
-          </Card> */}
-        <Card width={600} height={300}>
-          {personInfo ? (
-            <Stack>
-              <Card width={600} height={200}>
-                <CardBody>
-                  <Box>{/* <LegislatorArea personInfo={personInfo} /> */}</Box>
-                </CardBody>
-              </Card>
-            </Stack>
-          ) : (
-            <>
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
-                size="xl"
-                alignSelf={"auto"}
-              />
-              <Text>Legislator Loading...</Text>
+              <Box>
+                <Center>
+                  <Stack>
+                    <Box></Box>
+                    <Box></Box>
+                    <Spinner
+                      thickness="4px"
+                      speed="0.65s"
+                      emptyColor="gray.200"
+                      color="blue.500"
+                      size="xl"
+                      alignSelf={"auto"}
+                    />
+                    <Text>Summary Loading...</Text>
+                  </Stack>
+                </Center>
+              </Box>
             </>
           )}
         </Card>
