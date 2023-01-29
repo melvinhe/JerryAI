@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from transformers import pipeline
 import tensorflow as tf
 import asyncio
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -15,6 +16,8 @@ app = FastAPI()
 # similar bills?
 # 
 
+class Data(BaseModel):
+    message: str
 
 @app.get("/")
 async def root():
@@ -22,7 +25,7 @@ async def root():
 
 
 @app.post("/summerize")
-async def summerize(message):
+async def summerize(data: Data):
     """
     Model type: Tensorflow
     returns a summerization of message that is provided
@@ -31,7 +34,7 @@ async def summerize(message):
     summarizer = pipeline(
         "summarization", model="philschmid/bart-large-cnn-samsum")
 
-    return summarizer(message)
+    return summarizer(data.message)
 
 
 @app.post("/billCassification")

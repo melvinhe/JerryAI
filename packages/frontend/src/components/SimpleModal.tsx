@@ -11,7 +11,8 @@ export function SimpleModal() {
       event.preventDefault();
 
       const requestOptions = {
-        method: 'GET',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: question1 + question2 })
     };
       
@@ -19,12 +20,6 @@ export function SimpleModal() {
         .then((response) => response.json())
         .then((data) => alert(data))
     };
-
-    function testBackend() {
-      fetch("api/")
-        .then((response) => response.json())
-        .then((data) => alert("coming from backend: " + data.message));
-    }
 
     const [question1, setQuestion1] = useState('');
     const [question2, setQuestion2] = useState('');
