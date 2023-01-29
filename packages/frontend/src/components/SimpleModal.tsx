@@ -124,7 +124,8 @@ export function SimpleModal() {
 
   return (
     <>
-      <Button variant="outline" onClick={onOpen} color="green.400" margin={5}>
+    
+      <Button variant='solid' onClick={onOpen} color="green.400" margin={5}>
         Generate
       </Button>
 
@@ -216,9 +217,30 @@ export function SimpleModal() {
             <CardBody>
               <Stack divider={<StackDivider />} spacing="4">
                 <Box>
+                  <Flex>
                   <Heading size="xs" textTransform="uppercase">
-                    Summary
+                    Summary          
                   </Heading>
+                  <Spacer></Spacer>
+                  {classification.label ? (
+                    <Badge colorScheme={"green"} size={"lg"} height={5}>
+                      {classification.label + " " + classification.percentage}
+                    </Badge>
+                  ) : (
+                    <>
+                      <Spinner
+                        thickness="4px"
+                        speed="0.65s"
+                        emptyColor="gray.200"
+                        color="blue.500"
+                        size="xl"
+                        alignSelf={"auto"}
+                      />
+                      <Text>Classification Loading...</Text>
+                    </>
+                  )}
+                  </Flex>
+                  
                   <Text pt="2" fontSize="sm" whiteSpace={"pre-wrap"}>
                     {summary.toString()}
                   </Text>
@@ -239,24 +261,6 @@ export function SimpleModal() {
             </>
           )}
         </Card>
-
-        {classification.label ? (
-          <Badge colorScheme={"green"} size={"lg"}>
-            {classification.label + " " + classification.percentage}
-          </Badge>
-        ) : (
-          <>
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.500"
-              size="xl"
-              alignSelf={"auto"}
-            />
-            <Text>Classification Loading...</Text>
-          </>
-        )}
 
         {/* <Card width={600} height={200}>
             {summary ? <CardBody>
@@ -279,25 +283,29 @@ export function SimpleModal() {
             alignSelf={"auto"}
           /><Text>Summary Loading...</Text></>}
           </Card> */}
-        {personInfo.label ? (
-          <Stack>
-            <Card width={600} height={200}>
-              <LegislatorArea personInfo={personInfo} />
-            </Card>
-          </Stack>
-        ) : (
-          <>
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.500"
-              size="xl"
-              alignSelf={"auto"}
-            />
-            <Text>Classification Loading...</Text>
-          </>
-        )}
+        <Card width={600} height={300}>
+          {personInfo ? (
+            <Stack>
+              <Card width={600} height={200}>
+                <CardBody>
+                  <Box>{/* <LegislatorArea personInfo={personInfo} /> */}</Box>
+                </CardBody>
+              </Card>
+            </Stack>
+          ) : (
+            <>
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="blue.500"
+                size="xl"
+                alignSelf={"auto"}
+              />
+              <Text>Legislator Loading...</Text>
+            </>
+          )}
+        </Card>
       </Flex>
     </>
   );
