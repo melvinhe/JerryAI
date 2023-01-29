@@ -1,16 +1,18 @@
 from datetime import date
 import os
 import openai
+from dotenv import load_dotenv
+from pathlib import Path
 
-
-gpt3_apiKey = "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"
+dotenv_path = Path('..\MinneHack-2023\.env')
+load_dotenv()
 
 # Returns the current local date
 today = date.today()
 
 
 
-openai.api_key = gpt3_apiKey
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def generateIntro():
