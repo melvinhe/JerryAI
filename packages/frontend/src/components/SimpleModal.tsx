@@ -1,8 +1,7 @@
-import { Box, Button, Card, CardBody, Container, CardHeader, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, useDisclosure, Text, Spinner, Flex, Spacer, Center, ButtonGroup, IconButton, Tag } from "@chakra-ui/react"
+import { Box, Button, Card, CardBody, CardHeader, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, useDisclosure, Text, Spinner, Flex, Spacer, Center, ButtonGroup, IconButton, Tag } from "@chakra-ui/react"
 import { stringify } from "querystring"
 import React, { useEffect, useState } from "react"
 import { HiOutlineClipboard } from "react-icons/hi"
-import { LegislatorCard } from "./LegislatorCard"
 
 export function SimpleModal() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -158,14 +157,24 @@ export function SimpleModal() {
           /><Text>Summary Loading...</Text></>}
           </Card>
 
-          {classification.label ? <Tag height={10}>Classification: {" " + classification.label + " " + classification.percentage}</Tag>: <><Spinner
-                          thickness='4px'
-                          speed='0.65s'
-                          emptyColor='gray.200'
-                          color='blue.500'
-                          size='xl'
-                          alignSelf={"auto"}
-                        /><Text>Classification Loading...</Text></>}
+        {classification.label ? (
+          <Tag height={10}>
+            Classification:{" "}
+            {" " + classification.label + " " + classification.percentage}
+          </Tag>
+        ) : (
+          <>
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+              alignSelf={"auto"}
+            />
+            <Text>Classification Loading...</Text>
+          </>
+        )}
 
           {/* <Card width={600} height={200}>
             {summary ? <CardBody>
