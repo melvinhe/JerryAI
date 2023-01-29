@@ -42,23 +42,20 @@ export function SimpleModal() {
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
 
-  const [summary, setSummary] = useState(" ");
-  const [proposal, setProposal] = useState(" ");
-  const [classification, setClassification] = useState<{
-    label: string;
-    percentage: string;
-  }>({ label: " ", percentage: " " });
-
-  const initialRef = React.useRef(null);
-  const finalRef = React.useRef(null);
+    const [summary, setSummary] = useState(" ")
+    const [proposal, setProposal] = useState(" ")
+    const [classification, setClassification] = useState<{label: string, percentage: string}>({label: " ", percentage: " " })
+  
+    const initialRef = React.useRef(null)
+    const finalRef = React.useRef(null)
 
   const handleSubmit = (event) => {
     event.preventDefault();
     onClose();
 
-    setSummary("");
-    setProposal("");
-    setClassification({ label: "", percentage: "" });
+      setSummary("")
+      setProposal("")
+      setClassification({label: "", percentage: ""})
 
     const message =
       "a bill proposal that addresses " +
@@ -101,11 +98,8 @@ export function SimpleModal() {
             minimumFractionDigits: 2,
           }),
         })
-      )
-      .catch((err) => {
-        alert("billClassification error: " + err);
-      });
-  };
+        
+    };
 
   const [question1, setQuestion1] = useState("");
   const [question2, setQuestion2] = useState("");
