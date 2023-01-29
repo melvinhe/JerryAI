@@ -8,6 +8,7 @@ import os
 import openai
 from dotenv import load_dotenv
 from pathlib import Path
+import requests
 
 app = FastAPI()
 
@@ -81,6 +82,15 @@ async def BillDirection(data: Data):
     
     return generator(data.message)
 
+@app.post("/getReleventPersonInfo")
+async def getReleventPersonInfo(data: Data):
+    msg = "health"
+
+    cID = getCIDS(msg)
+    cInfo = getCInfo(cID)
+    MemberInfoList = memberInfo(cInfo)
+    return MemberInfoList
+
 
 @app.post("/getProposal")
 async def getProposal(data: Data):
@@ -143,10 +153,57 @@ def getBody(prompt):
     #
     return(response['choices'][0]['text'])
 
+
+
+
+
+def getCIDS(cType):
+    endpoint = "https://api.propublica.org/congress/v1/115/senate/committees.json"
+
+    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+
+    response = requests.get(endpoint, headers=header)
+
+    data = response.json()
+
+    goodCID = []
+
+    for committee in data['results'][0]['committees']:
+        if cType.casefold() in str(committee['name']).casefold():
+            goodCID.append(committee['id'])
+
+    return goodCID
+
+def getCInfo(goodCID):
+    cInfo = []
+    for cid in goodCID:
+        endpoint = f"https://api.propublica.org/congress/v1/115/senate/committees/{cid}.json"
+        header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+        response = requests.get(endpoint, headers=header)
+        data = response.json()
+        
+        for member in data['results'][0]['current_members']:
+            cInfo.append(str(member['id']))
+            #print(str(member['id']))
+ 
+    return cInfo
+    
+
+def memberInfo(memberList):
+    memberInfoList = []
+    endpoint = f"https://api.propublica.org/congress/v1/116/senate/members.json"
+    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+    response = requests.get(endpoint, headers=header)
+    data = response.json()
+    for members in data['results'][0]['members']:
+        if members['id'] in memberList:
+            memberInfoList.append(members)
+    return memberInfoList
+
 # for testing
 # msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
-# smtst = "a bill proposal that addresses an invasive species in Minnesota"
-# output = asyncio.run(summerizePY(smtst))
+#  smtst = "a bill proposal that addresses an invasive species in Minnesota"
+# output = asyncio.run(billCassification(msg.lower()))
 # print(output)
 
 
