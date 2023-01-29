@@ -108,7 +108,7 @@ export function SimpleModal() {
 
     return (
       <>
-        <Button onClick={onOpen} color="green.400" margin={5}>Generate</Button>
+        <Button variant="outline" onClick={onOpen} color="green.400" margin={5}>Generate</Button>
   
         <Modal
           initialFocusRef={initialRef}
@@ -135,7 +135,7 @@ export function SimpleModal() {
             </ModalBody>
   
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={handleSubmit}>
+              <Button variant="outline" colorScheme='blue' mr={3} onClick={handleSubmit}>
                 Generate
               </Button>
               <Button onClick={onClose}>Cancel</Button>
