@@ -18,11 +18,11 @@ export function LegislatorArea({ personInfo }) {
       <Menu>
         <MenuButton as={Button}>Your Cats</MenuButton>
         <MenuList>
-          {/* {personInfo?.map((item, i) => (
+          {personInfo?.results.map((item, i) => (
             <MenuItem minH="48px" key={i} onClick={() => alert('Kagebunshin')}>
             <span>{personInfo?.[i].first_name} {personInfo?.[i].last_name}</span>
           </MenuItem>
-          ))} */}
+          ))}
           
             <MenuItem>
                 

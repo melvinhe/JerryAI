@@ -32,17 +32,17 @@ import {
   Container,
 } from "@chakra-ui/react";
 
-export function LegislatorCard() {
+export function LegislatorCard(personInfo) {
   return (
     <>
       <Card maxW="md">
         <CardHeader>
           <Flex>
             <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-              <Avatar name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
+              {/* <Avatar name={personInfo[0].first_name} src="https://bit.ly/sage-adebayo" /> */}
 
               <Box>
-                <Heading size="sm">Segun Adebayo</Heading>
+                <Heading size="sm">{personInfo?.results[0].first_name} {personInfo[0].last_name}</Heading>
                 <Text>Creator, Chakra UI</Text>
               </Box>
             </Flex>
