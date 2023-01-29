@@ -116,7 +116,7 @@ async def getProposal(data: Data):
                 \n\n\n
                 (your name)"""
     
-    return (intro + title[0]['generated_text'] + "\n" + body + "\n" + ethank)
+    return (intro + title[0]['generated_text'] + body + ethank)
 
 
 def getTitle(message):
