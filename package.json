@@ -8,5 +8,6 @@
     "dev": "yarn env-cmd yarn workspaces foreach -pi run dev",
     "build": "yarn env-cmd yarn workspaces foreach -pi run build",
     "start": "yarn env-cmd yarn workspaces foreach -pi run start"
-  }
+  },
+  "packageManager": "yarn@3.3.1"
 }
