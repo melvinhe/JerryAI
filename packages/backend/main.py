@@ -56,11 +56,26 @@ async def billCassification(message):
     return classifier(message)
 
 
-# for testing
-# msg = "a bill proposal that addresses an increase in escaped convicts, and lowing the number of escapees"
 
-# output = asyncio.run(billCassification(msg))
-# print(output)
+@app.post("/BillDirection")
+async def BillDirection(message):
+    """
+    takes in a prompt then provides direction of where to go to get this bill passed
+
+    Model type: PyTorch
+
+    """
+
+    classifier = pipeline(
+        "text2text-generation", model="bheshaj/bart-large-cnn-small-billsum-5epochs")
+    
+    return classifier(message)
+
+# for testing
+msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
+
+output = asyncio.run(BillDirection(msg))
+print(output)
 
 
 
