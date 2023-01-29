@@ -5,14 +5,13 @@ export function SimpleModal() {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [loading, setLoading] = useState(false)
-    const [data, setData] = useState("")
+    const [summary, setSummary] = useState("")
   
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
 
     const handleSubmit = event => {
       event.preventDefault();
-      setLoading(true)
       onClose()
 
       const message = "a bill proposal that addresses " + question1 + ". The intended outcome would be " + question2
@@ -23,16 +22,15 @@ export function SimpleModal() {
         body: JSON.stringify({ message: message })
       };
       
-      try {
-        fetch("api/BillDirection", requestOptions)
+      setLoading(true)
+      fetch("api/BillDirection", requestOptions)
         .then((response) => response.json())
-        .then((data) => setData(data[0].generated_text))
-      } catch (error) {
-        alert(error)
-      }finally{
-        setLoading(false)
-      }
-      
+        .then((data) => setSummary(data[0].generated_text))
+        .catch((err) => {
+          alert(err)
+        })
+        .finally(() => setLoading(false))
+        
     };
 
     const [question1, setQuestion1] = useState('');
@@ -40,14 +38,14 @@ export function SimpleModal() {
 
     return (
       <>
-            {loading && <Spinner
-              thickness='4px'
-              speed='0.65s'
-              emptyColor='gray.200'
-              color='blue.500'
-              size='xl'
-              
-            />}
+          {loading && <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'
+            
+          />}
         <Button onClick={onOpen} color="green.400" margin={5}>Generate</Button>
   
         <Modal
@@ -95,7 +93,7 @@ export function SimpleModal() {
                   Summary
                 </Heading>
                 <Text pt='2' fontSize='sm'>
-                  {data.toString()}
+                  {summary.toString()}
                 </Text>
               </Box>
               <Box>
