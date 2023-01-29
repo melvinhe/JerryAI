@@ -23,7 +23,7 @@ const Index = () => (
   <DarkModeSwitch/>
   <Box display={"flex"}>
     <CTAIllustration/>
-    <Image src={georgeW1} alt="george washing art" width="500" height="500"/>
+    <Image src={georgeW1} alt="george washing art" width="600" height="500"/>
   </Box>
   <Footer/>
   </>
