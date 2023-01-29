@@ -1,11 +1,17 @@
-import { Box, Button, Card, CardBody, CardHeader, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, useDisclosure, Text, Spinner } from "@chakra-ui/react"
-import React, { useState } from "react"
+import { Box, Button, Card, CardBody, CardHeader, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, useDisclosure, Text, Spinner, Flex, Spacer, Center, ButtonGroup, IconButton, Tag } from "@chakra-ui/react"
+import { stringify } from "querystring"
+import React, { useEffect, useState } from "react"
+import { HiOutlineClipboard } from "react-icons/hi"
 
 export function SimpleModal() {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const [loading, setLoading] = useState(false)
-    const [summary, setSummary] = useState("")
+    const [loading1, setLoading1] = useState(false)
+    const [loading2, setLoading2] = useState(false)
+
+    const [summary, setSummary] = useState(" ")
+    const [proposal, setProposal] = useState(" ")
+    const [classification, setClassification] = useState<{label: string, percentage: string}>({label: " ", percentage: " " })
   
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
@@ -14,22 +20,43 @@ export function SimpleModal() {
       event.preventDefault();
       onClose()
 
+      setSummary("")
+      setProposal("")
+      setClassification({label: "", percentage: ""})
+
       const message = "a bill proposal that addresses " + question1 + ". The intended outcome would be " + question2
 
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: message })
+        body: JSON.stringify({ message: message.toLowerCase() })
       };
       
-      setLoading(true)
+      setLoading1(true)
+      setLoading2(true)
+
       fetch("api/BillDirection", requestOptions)
         .then((response) => response.json())
         .then((data) => setSummary(data[0].generated_text))
         .catch((err) => {
-          alert(err)
+          alert("BillDirection error: " + err)
         })
-        .finally(() => setLoading(false))
+        .finally(() => setLoading1(false))
+
+      fetch("api/getProposal", requestOptions)
+        .then((response) => response.json())
+        .then((data) => setProposal(data))
+        .catch((err) => {
+          alert("getProposal error: " + err)
+        })
+        .finally(() => setLoading2(false))
+
+      fetch("api/billCassification", requestOptions)
+        .then((response) => response.json())
+        .then((data) => setClassification({label: data[0].label, percentage: Number(data[0].score).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})}))
+        .catch((err) => {
+          alert("billClassification error: " + err)
+        })
         
     };
 
@@ -38,14 +65,6 @@ export function SimpleModal() {
 
     return (
       <>
-          {loading && <Spinner
-            thickness='4px'
-            speed='0.65s'
-            emptyColor='gray.200'
-            color='blue.500'
-            size='xl'
-            
-          />}
         <Button onClick={onOpen} color="green.400" margin={5}>Generate</Button>
   
         <Modal
@@ -81,40 +100,86 @@ export function SimpleModal() {
           </ModalContent>
         </Modal>
 
-        <Card>
-          <CardHeader>
-            <Heading size='md'>Client Report</Heading>
-          </CardHeader>
+        <Flex wrap={"wrap"} gridGap={5}>
+          <Card width={600} height={"auto"}>
+          {proposal ? <CardBody>
+              <Stack divider={<StackDivider />} spacing='4'>
+                <Box>
+                  <ButtonGroup>
+                    <Heading size='sm' textTransform='uppercase'>
+                      Bill Proposal
+                    </Heading>
+                    <IconButton size={"xs"} variant={"outline"} icon={<HiOutlineClipboard/>} aria-label="copy"/> 
+                  </ButtonGroup>
+                       
+                  <Text pt='2' fontSize='sm' whiteSpace={"pre-wrap"}>
+                    {proposal.toString()}
+                  </Text>
+                </Box>
+              </Stack>
+            </CardBody> : <><Spinner
+                thickness='4px'
+                speed='0.65s'
+                emptyColor='gray.200'
+                color='blue.500'
+                size='xl'
+                alignSelf={"auto"}
+              /><Text>Proposal Loading...</Text></>}
+          </Card>
+          <Card width={600} height={200}>
+            {summary ? <CardBody>
+              <Stack divider={<StackDivider />} spacing='4'>
+                <Box>
+                  <Heading size='xs' textTransform='uppercase'>
+                    Summary
+                  </Heading>
+                  <Text pt='2' fontSize='sm' whiteSpace={"pre-wrap"}>
+                    {summary.toString()}
+                  </Text>
+                </Box>
+              </Stack>
+            </CardBody> : <><Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'
+            alignSelf={"auto"}
+          /><Text>Summary Loading...</Text></>}
+          </Card>
 
-          <CardBody>
-            <Stack divider={<StackDivider />} spacing='4'>
-              <Box>
-                <Heading size='xs' textTransform='uppercase'>
-                  Summary
-                </Heading>
-                <Text pt='2' fontSize='sm'>
-                  {summary.toString()}
-                </Text>
-              </Box>
-              <Box>
-                <Heading size='xs' textTransform='uppercase'>
-                  Overview
-                </Heading>
-                <Text pt='2' fontSize='sm'>
-                  Check out the overview of your clients.
-                </Text>
-              </Box>
-              <Box>
-                <Heading size='xs' textTransform='uppercase'>
-                  Analysis
-                </Heading>
-                <Text pt='2' fontSize='sm'>
-                  See a detailed analysis of all your business clients.
-                </Text>
-              </Box>
-            </Stack>
-          </CardBody>
-        </Card>
+          {classification.label ? <Tag height={10}>Classification: {" " + classification.label + " " + classification.percentage}</Tag>: <><Spinner
+                          thickness='4px'
+                          speed='0.65s'
+                          emptyColor='gray.200'
+                          color='blue.500'
+                          size='xl'
+                          alignSelf={"auto"}
+                        /><Text>Classification Loading...</Text></>}
+
+          {/* <Card width={600} height={200}>
+            {summary ? <CardBody>
+              <Stack divider={<StackDivider />} spacing='4'>
+                <Box>
+                  <Heading size='xs' textTransform='uppercase'>
+                    Summary
+                  </Heading>
+                  <Text pt='2' fontSize='sm' whiteSpace={"pre-wrap"}>
+                    {summary.toString()}
+                  </Text>
+                </Box>
+              </Stack>
+            </CardBody> : <><Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'
+            alignSelf={"auto"}
+          /><Text>Summary Loading...</Text></>}
+          </Card> */}
+
+        </Flex>
       </>
     )
   }

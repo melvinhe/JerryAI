@@ -11,6 +11,9 @@ import {
   createIcon,
 } from '@chakra-ui/react';
 
+import georgeW1 from "../public/georgeW1.png"
+import Image from 'next/image';
+
 export function CTAIllustration() {
   return (
     <>

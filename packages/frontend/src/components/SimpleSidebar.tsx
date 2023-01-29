@@ -31,8 +31,8 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Home', icon: FiHome, link: '/' },
-  { name: 'Generate a bill', icon: FiActivity, link: '/generate' },
-  { name: 'Summerize a bill', icon: FiBookOpen, link: '/summerize'},
+  { name: 'Generate Bill Proposal', icon: FiActivity, link: '/generate' },
+  { name: 'Summerize Bill', icon: FiBookOpen, link: '/summerize'},
 ];
 
 export function SimpleSidebar({ children }: { children: ReactNode }) {
@@ -80,7 +80,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          JerryAI
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>

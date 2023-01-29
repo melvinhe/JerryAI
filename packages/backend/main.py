@@ -48,7 +48,7 @@ async def summerize(data: Data):
 
 
 @app.post("/billCassification")
-async def billCassification(message):
+async def billCassification(data: Data):
     """
     provide a summarization of the bill in which you would like to classify
 
@@ -63,7 +63,7 @@ async def billCassification(message):
     classifier = pipeline(
         "text-classification", model="z-dickson/CAP_coded_US_Congressional_bills")
     
-    return classifier(message)
+    return classifier(data.message)
 
 
 
@@ -83,7 +83,7 @@ async def BillDirection(data: Data):
 
 
 @app.post("/getProposal")
-async def getProposal(prompt):
+async def getProposal(data: Data):
     today = date.today()
     intro = f"""
     {today}\n
@@ -94,9 +94,11 @@ async def getProposal(prompt):
     (officials city, state and zip code)\n\n
     """
 
-    title = getTitle(prompt)
+    title = getTitle(data.message)
 
-    body = getBody(prompt)
+    #body = getBody(data.message)
+    body = """THis is a random paragraph that it should grab from openai. mkaies sure to comment this out \n
+               for when we actually have to call it"""
 
     ethank = """I am looking forward to hearing your input on this and am hoping you consider my input.\n
                 Thank you for your time and consideration.\n\n
