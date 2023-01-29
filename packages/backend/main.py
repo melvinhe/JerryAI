@@ -66,16 +66,29 @@ async def BillDirection(message):
 
     """
 
-    classifier = pipeline(
+    generator = pipeline(
         "text2text-generation", model="bheshaj/bart-large-cnn-small-billsum-5epochs")
     
-    return classifier(message)
+    return generator(message)
+
+
+@app.post("/summerize")
+async def summerizePY(data):
+    """
+    Model type: Tensorflow
+    returns a summerization of message that is provided
+    """
+
+    summarizer = pipeline(
+        "summarization", model="philschmid/bart-large-cnn-samsum")
+
+    return summarizer(data)
 
 # for testing
-# msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
-
-# output = asyncio.run(BillDirection(msg))
-# print(output)
+msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
+smtst = "a bill proposal that addresses an invasive species in Minnesota"
+output = asyncio.run(summerizePY(smtst))
+print(output)
 
 
 
