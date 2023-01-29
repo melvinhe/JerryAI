@@ -12,6 +12,7 @@ export function SimpleModal() {
     const [summary, setSummary] = useState(" ")
     const [proposal, setProposal] = useState(" ")
     const [classification, setClassification] = useState<{label: string, percentage: string}>({label: " ", percentage: " " })
+    const [personInfo, setPersonInfo] = useState<any>({})
   
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
@@ -23,6 +24,7 @@ export function SimpleModal() {
       setSummary("")
       setProposal("")
       setClassification({label: "", percentage: ""})
+      setPersonInfo({})
 
       const message = "a bill proposal that addresses " + question1 + ". The intended outcome would be " + question2
 
@@ -56,6 +58,13 @@ export function SimpleModal() {
         .then((data) => setClassification({label: data[0].label, percentage: Number(data[0].score).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})}))
         .catch((err) => {
           alert("billClassification error: " + err)
+        })
+
+      fetch("api/getReleventPersonInfo", requestOptions)
+        .then((response) => response.json())
+        .then((data) => setPersonInfo(data))
+        .catch((err) => {
+          alert("getReleventPersonInfo error: " + err)
         })
         
     };

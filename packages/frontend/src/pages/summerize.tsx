@@ -1,5 +1,4 @@
 import { Heading, Textarea } from "@chakra-ui/react";
-import { DarkModeSwitch } from "../components/DarkModeSwitch";
 import { SimpleSidebar } from "../components/SimpleSidebar";
 
 const Summerize = () => (
