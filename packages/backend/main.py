@@ -71,7 +71,7 @@ async def billCassification(data: Data):
 
 @app.post("/BillDirection")
 async def BillDirection(data: Data):
-    """s
+    """
     takes in a prompt then provides direction of where to go to get this bill passed
 
     Model type: PyTorch
@@ -79,16 +79,28 @@ async def BillDirection(data: Data):
     """
 
     generator = pipeline(
-        "text2text-genvcchs")
+        "text2text-generation", model="bheshaj/bart-large-cnn-small-billsum-5epochs")
     
     return generator(data.message)
 
 @app.post("/getReleventPersonInfo")
 async def getReleventPersonInfo(data: Data):
-    cID = getCIDS(data)
+    all_words = data.message.split()
+    first_word= all_words[0]
+    cID = getCIDS(first_word)
+    print(cID)
     cInfo = getCInfo(cID)
-    MemberInfoList = memberInfo(cInfo)
-    return json.loads(MemberInfoList)
+    print(cInfo)
+    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+    endpoint2 = f"https://api.propublica.org/congress/v1/members/{cInfo[0]}.json"
+    response2 = requests.get(endpoint2, headers=header)
+    data = response2.json()
+    #memberInfoList.append(members)
+    #print(data2)
+    return data
+
+    # MemberInfoList = memberInfo(cInfo)
+    # return MemberInfoList
 
 
 @app.post("/getProposal")
@@ -167,7 +179,7 @@ def getCIDS(cType):
     goodCID = []
 
     for committee in data['results'][0]['committees']:
-        if cType.casefold() in str(committee['name']).casefold():
+        if str(cType).casefold() in str(committee['name']).casefold():
             goodCID.append(committee['id'])
 
     return goodCID
@@ -175,7 +187,7 @@ def getCIDS(cType):
 def getCInfo(goodCID):
     cInfo = []
     for cid in goodCID:
-        endpoint = f"https://api.propublica.org/congress/v1/115/senate/committees/{cid}.json"
+        endpoint = f"https://api.propublica.org/congress/v1/115/senate/committees/{str(cid)}.json"
         header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
         response = requests.get(endpoint, headers=header)
         data = response.json()
@@ -195,14 +207,18 @@ def memberInfo(memberList):
     data = response.json()
     for members in data['results'][0]['members']:
         if members['id'] in memberList:
-            memberInfoList.append(members)
-    return memberInfoList
+            endpoint2 = f"https://api.propublica.org/congress/v1/members/{members['id']}.json"
+            response2 = requests.get(endpoint2, headers=header)
+            data2 = response2.json()
+            #memberInfoList.append(members)
+            print(data2)
+            return data2
 
 # for testing
 # msg = "a bill proposal that addresses an invasive species in Minnesota. The intended outcome would be to eliminate or reduce the population of the invasive species"
 #  smtst = "a bill proposal that addresses an invasive species in Minnesota"
-output = asyncio.run(getReleventPersonInfo("health"))
-print(output)
+#output = asyncio.run(getReleventPersonInfo("health"))
+#print(output)
 
 
 
