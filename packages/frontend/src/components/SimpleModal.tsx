@@ -1,24 +1,38 @@
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Card, CardBody, CardHeader, FormControl, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, StackDivider, useDisclosure, Text, Spinner } from "@chakra-ui/react"
 import React, { useState } from "react"
 
 export function SimpleModal() {
     const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const [loading, setLoading] = useState(false)
+    const [data, setData] = useState("")
   
     const initialRef = React.useRef(null)
     const finalRef = React.useRef(null)
 
     const handleSubmit = event => {
       event.preventDefault();
+      setLoading(true)
+      onClose()
+
+      const message = "a bill proposal that addresses " + question1 + ". The intended outcome would be " + question2
 
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: question1 + question2 })
-    };
+        body: JSON.stringify({ message: message })
+      };
       
-      fetch("api/summerize", requestOptions)
+      try {
+        fetch("api/BillDirection", requestOptions)
         .then((response) => response.json())
-        .then((data) => alert(data))
+        .then((data) => setData(data[0].generated_text))
+      } catch (error) {
+        alert(error)
+      }finally{
+        setLoading(false)
+      }
+      
     };
 
     const [question1, setQuestion1] = useState('');
@@ -26,6 +40,14 @@ export function SimpleModal() {
 
     return (
       <>
+            {loading && <Spinner
+              thickness='4px'
+              speed='0.65s'
+              emptyColor='gray.200'
+              color='blue.500'
+              size='xl'
+              
+            />}
         <Button onClick={onOpen} color="green.400" margin={5}>Generate</Button>
   
         <Modal
@@ -60,6 +82,41 @@ export function SimpleModal() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+
+        <Card>
+          <CardHeader>
+            <Heading size='md'>Client Report</Heading>
+          </CardHeader>
+
+          <CardBody>
+            <Stack divider={<StackDivider />} spacing='4'>
+              <Box>
+                <Heading size='xs' textTransform='uppercase'>
+                  Summary
+                </Heading>
+                <Text pt='2' fontSize='sm'>
+                  {data.toString()}
+                </Text>
+              </Box>
+              <Box>
+                <Heading size='xs' textTransform='uppercase'>
+                  Overview
+                </Heading>
+                <Text pt='2' fontSize='sm'>
+                  Check out the overview of your clients.
+                </Text>
+              </Box>
+              <Box>
+                <Heading size='xs' textTransform='uppercase'>
+                  Analysis
+                </Heading>
+                <Text pt='2' fontSize='sm'>
+                  See a detailed analysis of all your business clients.
+                </Text>
+              </Box>
+            </Stack>
+          </CardBody>
+        </Card>
       </>
     )
   }
