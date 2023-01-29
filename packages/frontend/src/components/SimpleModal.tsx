@@ -9,8 +9,22 @@ export function SimpleModal() {
 
     const handleSubmit = event => {
       event.preventDefault();
-      
+
+      const requestOptions = {
+        method: 'GET',
+        body: JSON.stringify({ message: question1 + question2 })
     };
+      
+      fetch("api/summerize", requestOptions)
+        .then((response) => response.json())
+        .then((data) => alert(data))
+    };
+
+    function testBackend() {
+      fetch("api/")
+        .then((response) => response.json())
+        .then((data) => alert("coming from backend: " + data.message));
+    }
 
     const [question1, setQuestion1] = useState('');
     const [question2, setQuestion2] = useState('');
