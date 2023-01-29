@@ -29,7 +29,8 @@ import {
   Avatar,
   CardFooter,
   Image,
-  Container
+  Container,
+  Badge
 } from "@chakra-ui/react";
 import { stringify } from "querystring";
 import React, { useEffect, useState } from "react";
@@ -44,7 +45,7 @@ export function SimpleModal() {
 
     const [summary, setSummary] = useState(" ")
     const [proposal, setProposal] = useState(" ")
-    const [classification, setClassification] = useState<{label: string, percentage: string}>({label: " ", percentage: " " })
+    const [classification, setClassification] = useState<{label: string, percentage: string}>({label: "None", percentage: " " })
     const [personInfo, setPersonInfo] = useState<any>({})
   
     const initialRef = React.useRef(null)
@@ -191,10 +192,7 @@ export function SimpleModal() {
           </Card>
 
         {classification.label ? (
-          <Tag height={10}>
-            Classification:{" "}
-            {" " + classification.label + " " + classification.percentage}
-          </Tag>
+          <Badge colorScheme={'green'} size={"lg"}>{classification.label + " " + classification.percentage}</Badge>
         ) : (
           <>
             <Spinner
