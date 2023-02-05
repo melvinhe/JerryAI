@@ -3,7 +3,7 @@ import requests
 
 endpoint = "https://api.propublica.org/congress/v1/115/senate/committees.json"
 
-header = "yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w"
+header = ""
 
 
 def getReleventPersonInfo():
@@ -18,7 +18,7 @@ def getReleventPersonInfo():
 def getCIDS(cType):
     endpoint = "https://api.propublica.org/congress/v1/115/senate/committees.json"
 
-    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+    header = {'X-API-Key': ''}
 
     response = requests.get(endpoint, headers=header)
 
@@ -36,7 +36,7 @@ def getCInfo(goodCID):
     cInfo = []
     for cid in goodCID:
         endpoint = f"https://api.propublica.org/congress/v1/115/senate/committees/{cid}.json"
-        header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+        header = {'X-API-Key': ''}
         response = requests.get(endpoint, headers=header)
         data = response.json()
         
@@ -50,7 +50,7 @@ def getCInfo(goodCID):
 def memberInfo(memberList):
     memberInfoList = []
     endpoint = f"https://api.propublica.org/congress/v1/116/senate/members.json"
-    header = {'X-API-Key': 'yXP0XABzoNU3didJEyfVma8wjJfX82S08PqFQ8w'}
+    header = {'X-API-Key': ''}
     response = requests.get(endpoint, headers=header)
     data = response.json()
     for members in data['results'][0]['members']:
